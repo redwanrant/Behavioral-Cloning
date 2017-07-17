@@ -18,6 +18,13 @@ def read_data(file_path):
 
 def flip_image(image):
     return cv2.flip(image, 1)
+    
+
+def process_image(image):
+    image = image[60:, :, :]
+    image = cv2.resize(image, (200, 66))
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
+    return image
 
 
 def get_images(data):
@@ -30,9 +37,10 @@ def get_images(data):
             continue
         source_path = line[0]
         file_name = source_path.split('/')[-1]
-        current_path = "/input/data/IMG/" + file_name
+        current_path = "input/data/IMG/" + file_name
         #image = cv2.imread(current_path)
         image = mpimg.imread(current_path)
+        image = process_image(image)
         images.append(image)
         images.append(flip_image(image))
         measurement = float(line[3])
