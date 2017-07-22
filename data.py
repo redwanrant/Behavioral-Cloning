@@ -39,13 +39,18 @@ def get_images(data):
         file_name = source_path.split('/')[-1]
         current_path = "input/data/IMG/" + file_name
         #image = cv2.imread(current_path)
-        image = mpimg.imread(current_path)
-        image = process_image(image)
-        images.append(image)
-        images.append(flip_image(image))
+
         measurement = float(line[3])
-        measurements.append(measurement)
-        measurements.append(measurement*-1)
+
+        if measurement != 0:
+            measurements.append(measurement)
+            measurements.append(measurement*-1)
+
+            image = mpimg.imread(current_path)
+            image = process_image(image)
+            images.append(image)
+            images.append(flip_image(image))
+
 
     X_train = np.array(images)
     y_train = np.array(measurements)

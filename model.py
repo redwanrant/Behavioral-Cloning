@@ -8,6 +8,7 @@ import os
 
 import data
 
+
 def nvidia_model(train):
     model = Sequential()
     model.add(Lambda(lambda x: x/127.5 - 1.,input_shape=(66, 200, 3)))
