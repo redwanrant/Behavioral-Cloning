@@ -17,10 +17,12 @@ def read_data(file_path):
 
 
 def flip_image(image):
+    """Flip over y-axis"""
     return cv2.flip(image, 1)
     
 
 def process_image(image):
+    """Crop top part of image, resize to 200 x 66 and convert to YUV"""
     image = image[60:, :, :]
     image = cv2.resize(image, (200, 66))
     image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
@@ -32,30 +34,36 @@ def get_images(data):
     images = []
     measurements = []
 
+    # For straight on camera view, left camera, right camera
+    ANGLE_CORRECTIONS = (0, 0.15, -0.15)
+
     for i, line in enumerate(data):
+        # Skip first line which is the header
         if i == 0:
             continue
-        source_path = line[0]
-        file_name = source_path.split('/')[-1]
-        current_path = "input/data/IMG/" + file_name
-        #image = cv2.imread(current_path)
 
         measurement = float(line[3])
+        measurement += cam_pos
 
+        # Ignore steering wheel angles of zero, they don't
+        # help in training
         if measurement != 0:
-            measurements.append(measurement)
-            measurements.append(measurement*-1)
+            for j, cam_pos in enumerate(ANGLE_CORRECTIONS):
+                source_path = line[j]
+                file_name = source_path.split('/')[-1]
+                current_path = "input/data/IMG/" + file_name
 
-            image = mpimg.imread(current_path)
-            image = process_image(image)
-            images.append(image)
-            images.append(flip_image(image))
+                measurements.append(measurement)
+                measurements.append(measurement*-1)
+
+                image = mpimg.imread(current_path)
+                image = process_image(image)
+                images.append(image)
+                images.append(flip_image(image))
 
 
     X_train = np.array(images)
     y_train = np.array(measurements)
-    print(X_train.shape)
-    print(y_train.shape)
 
     return {'X_train': X_train, 'y_train': y_train}
 
