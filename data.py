@@ -43,12 +43,12 @@ def get_images(data):
             continue
 
         measurement = float(line[3])
-        measurement += cam_pos
 
         # Ignore steering wheel angles of zero, they don't
         # help in training
         if measurement != 0:
             for j, cam_pos in enumerate(ANGLE_CORRECTIONS):
+                measurement += cam_pos
                 source_path = line[j]
                 file_name = source_path.split('/')[-1]
                 current_path = "input/data/IMG/" + file_name
@@ -69,6 +69,7 @@ def get_images(data):
 
 
 if __name__ == "__main__":
-    csv_file = "udacity-data/data/driving_log.csv"
+    csv_file = "input/data/driving_log.csv"
     driving_data = read_data(csv_file)
     images = get_images(driving_data)
+    print(len(images["X_train"]))
