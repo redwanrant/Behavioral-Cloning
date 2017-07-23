@@ -46,7 +46,7 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 15
+set_speed = 30
 controller.set_desired(set_speed)
 
 
@@ -69,9 +69,6 @@ def telemetry(sid, data):
         throttle = controller.update(float(speed))
 
         print(steering_angle, throttle)
-        # if abs(steering_angle) > 0.05:
-        #     steering_angle *= 1.2
-        #     print("COMPENSATE")
         send_control(steering_angle, throttle)
 
         # save frame
