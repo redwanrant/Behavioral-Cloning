@@ -72,4 +72,3 @@ if __name__ == "__main__":
     csv_file = "input/data/driving_log.csv"
     driving_data = read_data(csv_file)
     images = get_images(driving_data)
-    print(len(images["X_train"]))
